@@ -5,24 +5,24 @@ import java.sql.Date;
 import java.util.Objects;
 
 @Entity
-@Table(name = "user", schema = "ss_web", catalog = "")
+@Table(name = "user", schema = "ss_web")
 public class UserEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "id")
-    private int id;
+    private Long id;
     @Basic
     @Column(name = "user_id")
-    private int userId;
+    private Long userId;
     @Basic
     @Column(name = "user_name")
     private String userName;
     @Basic
     @Column(name = "user_sex")
-    private byte userSex;
+    private Integer userSex;
     @Basic
     @Column(name = "user_type")
-    private byte userType;
+    private Integer userType;
     @Basic
     @Column(name = "birthday")
     private Date birthday;
@@ -33,19 +33,19 @@ public class UserEntity {
     @Column(name = "phone")
     private String phone;
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public int getUserId() {
+    public Long getUserId() {
         return userId;
     }
 
-    public void setUserId(int userId) {
+    public void setUserId(Long userId) {
         this.userId = userId;
     }
 
@@ -57,19 +57,19 @@ public class UserEntity {
         this.userName = userName;
     }
 
-    public byte getUserSex() {
+    public Integer getUserSex() {
         return userSex;
     }
 
-    public void setUserSex(byte userSex) {
+    public void setUserSex(Integer userSex) {
         this.userSex = userSex;
     }
 
-    public byte getUserType() {
+    public Integer getUserType() {
         return userType;
     }
 
-    public void setUserType(byte userType) {
+    public void setUserType(Integer userType) {
         this.userType = userType;
     }
 
@@ -102,7 +102,7 @@ public class UserEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         UserEntity that = (UserEntity) o;
-        return id == that.id && userId == that.userId && userSex == that.userSex && userType == that.userType && Objects.equals(userName, that.userName) && Objects.equals(birthday, that.birthday) && Objects.equals(password, that.password) && Objects.equals(phone, that.phone);
+        return Objects.equals(id, that.id) && Objects.equals(userId, that.userId) && Objects.equals(userName, that.userName) && Objects.equals(userSex, that.userSex) && Objects.equals(userType, that.userType) && Objects.equals(birthday, that.birthday) && Objects.equals(password, that.password) && Objects.equals(phone, that.phone);
     }
 
     @Override

@@ -4,62 +4,62 @@ import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
-@Table(name = "submission", schema = "ss_web", catalog = "")
+@Table(name = "submission", schema = "ss_web")
 public class SubmissionEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "id")
-    private int id;
+    private Long id;
     @Basic
     @Column(name = "floor_id")
-    private byte floorId;
+    private Integer floorId;
     @Basic
     @Column(name = "user_id")
-    private int userId;
+    private Long userId;
     @Basic
     @Column(name = "user_cnt")
-    private byte userCnt;
+    private Integer userCnt;
     @Basic
     @Column(name = "status")
-    private byte status;
+    private Integer status;
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public byte getFloorId() {
+    public Integer getFloorId() {
         return floorId;
     }
 
-    public void setFloorId(byte floorId) {
+    public void setFloorId(Integer floorId) {
         this.floorId = floorId;
     }
 
-    public int getUserId() {
+    public Long getUserId() {
         return userId;
     }
 
-    public void setUserId(int userId) {
+    public void setUserId(Long userId) {
         this.userId = userId;
     }
 
-    public byte getUserCnt() {
+    public Integer getUserCnt() {
         return userCnt;
     }
 
-    public void setUserCnt(byte userCnt) {
+    public void setUserCnt(Integer userCnt) {
         this.userCnt = userCnt;
     }
 
-    public byte getStatus() {
+    public Integer getStatus() {
         return status;
     }
 
-    public void setStatus(byte status) {
+    public void setStatus(Integer status) {
         this.status = status;
     }
 
@@ -68,7 +68,7 @@ public class SubmissionEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         SubmissionEntity that = (SubmissionEntity) o;
-        return id == that.id && floorId == that.floorId && userId == that.userId && userCnt == that.userCnt && status == that.status;
+        return Objects.equals(id, that.id) && Objects.equals(floorId, that.floorId) && Objects.equals(userId, that.userId) && Objects.equals(userCnt, that.userCnt) && Objects.equals(status, that.status);
     }
 
     @Override

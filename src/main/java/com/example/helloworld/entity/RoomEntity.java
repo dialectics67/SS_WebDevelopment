@@ -4,84 +4,84 @@ import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
-@Table(name = "room", schema = "ss_web", catalog = "")
+@Table(name = "room", schema = "ss_web")
 public class RoomEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "id")
-    private int id;
+    private Long id;
     @Basic
     @Column(name = "room_id")
-    private int roomId;
+    private Long roomId;
     @Basic
     @Column(name = "room_sex")
-    private byte roomSex;
+    private Integer roomSex;
     @Basic
     @Column(name = "room_available")
-    private byte roomAvailable;
+    private Integer roomAvailable;
     @Basic
     @Column(name = "bed_cnt_all")
-    private byte bedCntAll;
+    private Integer bedCntAll;
     @Basic
     @Column(name = "bet_cnt_available")
-    private byte betCntAvailable;
+    private Integer betCntAvailable;
     @Basic
     @Column(name = "bed_cnt_free")
-    private byte bedCntFree;
+    private Integer bedCntFree;
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public int getRoomId() {
+    public Long getRoomId() {
         return roomId;
     }
 
-    public void setRoomId(int roomId) {
+    public void setRoomId(Long roomId) {
         this.roomId = roomId;
     }
 
-    public byte getRoomSex() {
+    public Integer getRoomSex() {
         return roomSex;
     }
 
-    public void setRoomSex(byte roomSex) {
+    public void setRoomSex(Integer roomSex) {
         this.roomSex = roomSex;
     }
 
-    public byte getRoomAvailable() {
+    public Integer getRoomAvailable() {
         return roomAvailable;
     }
 
-    public void setRoomAvailable(byte roomAvailable) {
+    public void setRoomAvailable(Integer roomAvailable) {
         this.roomAvailable = roomAvailable;
     }
 
-    public byte getBedCntAll() {
+    public Integer getBedCntAll() {
         return bedCntAll;
     }
 
-    public void setBedCntAll(byte bedCntAll) {
+    public void setBedCntAll(Integer bedCntAll) {
         this.bedCntAll = bedCntAll;
     }
 
-    public byte getBetCntAvailable() {
+    public Integer getBetCntAvailable() {
         return betCntAvailable;
     }
 
-    public void setBetCntAvailable(byte betCntAvailable) {
+    public void setBetCntAvailable(Integer betCntAvailable) {
         this.betCntAvailable = betCntAvailable;
     }
 
-    public byte getBedCntFree() {
+    public Integer getBedCntFree() {
         return bedCntFree;
     }
 
-    public void setBedCntFree(byte bedCntFree) {
+    public void setBedCntFree(Integer bedCntFree) {
         this.bedCntFree = bedCntFree;
     }
 
@@ -90,7 +90,7 @@ public class RoomEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         RoomEntity that = (RoomEntity) o;
-        return id == that.id && roomId == that.roomId && roomSex == that.roomSex && roomAvailable == that.roomAvailable && bedCntAll == that.bedCntAll && betCntAvailable == that.betCntAvailable && bedCntFree == that.bedCntFree;
+        return Objects.equals(id, that.id) && Objects.equals(roomId, that.roomId) && Objects.equals(roomSex, that.roomSex) && Objects.equals(roomAvailable, that.roomAvailable) && Objects.equals(bedCntAll, that.bedCntAll) && Objects.equals(betCntAvailable, that.betCntAvailable) && Objects.equals(bedCntFree, that.bedCntFree);
     }
 
     @Override

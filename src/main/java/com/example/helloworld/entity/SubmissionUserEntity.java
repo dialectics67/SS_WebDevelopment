@@ -4,40 +4,40 @@ import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
-@Table(name = "submission_user", schema = "ss_web", catalog = "")
+@Table(name = "submission_user", schema = "ss_web")
 public class SubmissionUserEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "id")
-    private int id;
+    private Long id;
     @Basic
     @Column(name = "submission_id")
-    private int submissionId;
+    private Long submissionId;
     @Basic
     @Column(name = "user_id")
-    private int userId;
+    private Long userId;
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public int getSubmissionId() {
+    public Long getSubmissionId() {
         return submissionId;
     }
 
-    public void setSubmissionId(int submissionId) {
+    public void setSubmissionId(Long submissionId) {
         this.submissionId = submissionId;
     }
 
-    public int getUserId() {
+    public Long getUserId() {
         return userId;
     }
 
-    public void setUserId(int userId) {
+    public void setUserId(Long userId) {
         this.userId = userId;
     }
 
@@ -46,7 +46,7 @@ public class SubmissionUserEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         SubmissionUserEntity that = (SubmissionUserEntity) o;
-        return id == that.id && submissionId == that.submissionId && userId == that.userId;
+        return Objects.equals(id, that.id) && Objects.equals(submissionId, that.submissionId) && Objects.equals(userId, that.userId);
     }
 
     @Override

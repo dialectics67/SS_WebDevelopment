@@ -3,9 +3,11 @@ server:
   servlet:
     context-path: /
 spring:
+  profiles:
+    include: security
   datasource:
-    url: jdbc:mysql://localhost:3306/ss_web?useUnicode=true&characterEncoding=UTF-8&useSSL=false&autoReconnect=true&failOverReadOnly=false&serverTimezone=UTC
+    url: jdbc:mysql://${security.datasource.host}:3306/ss_web?useUnicode=true&characterEncoding=UTF-8&useSSL=false&autoReconnect=true&failOverReadOnly=false&serverTimezone=UTC
     username: root
-    password: ${spring.datasource.password}
+    password: ${security.datasource.password}
     driver-class-name: com.mysql.cj.jdbc.Driver
     type: com.zaxxer.hikari.HikariDataSource

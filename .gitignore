@@ -5,7 +5,7 @@ target/
 !**/src/test/**/target/
 
 ### PASSWORD ###
-password.yaml
+application-security.yaml
 
 ### STS ###
 .apt_generated
