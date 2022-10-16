@@ -24,6 +24,8 @@ public interface RoomService {
 
     List<RoomEntity> findById(Collection<Long> ids);
 
+    List<RoomEntity> findByRoomSex(Integer roomSex);
+
     Iterable<RoomEntity> findAll();
 
 //    Page<RoomEntity> list(Pageable page);

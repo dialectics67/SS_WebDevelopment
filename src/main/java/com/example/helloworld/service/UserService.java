@@ -24,6 +24,8 @@ public interface UserService {
 
     Optional<UserEntity> findById(Long id);
 
+    Optional<UserEntity> findByUserId(Long userId);
+
     List<UserEntity> findById(Collection<Long> ids);
 
 //    Page<UserEntity> list(Pageable page);

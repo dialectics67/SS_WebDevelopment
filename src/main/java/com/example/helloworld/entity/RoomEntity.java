@@ -29,6 +29,10 @@ public class RoomEntity {
     @Column(name = "bed_cnt_free")
     private Integer bedCntFree;
 
+    @Basic
+    @Column(name = "floor_id")
+    private Integer floorId;
+
     public Long getId() {
         return id;
     }
@@ -85,6 +89,14 @@ public class RoomEntity {
         this.bedCntFree = bedCntFree;
     }
 
+    public void setFloorId(Integer floorId) {
+        this.floorId = floorId;
+    }
+
+    public Integer getFloorId() {
+        return floorId;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -97,4 +109,5 @@ public class RoomEntity {
     public int hashCode() {
         return Objects.hash(id, roomId, roomSex, roomAvailable, bedCntAll, betCntAvailable, bedCntFree);
     }
+
 }

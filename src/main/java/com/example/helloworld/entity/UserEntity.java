@@ -32,6 +32,9 @@ public class UserEntity {
     @Basic
     @Column(name = "phone")
     private String phone;
+    @Basic
+    @Column(name = "check_code")
+    private String checkCode;
 
     public Long getId() {
         return id;
@@ -97,6 +100,14 @@ public class UserEntity {
         this.phone = phone;
     }
 
+    public String getCheckCode() {
+        return checkCode;
+    }
+
+    public void setCheckCode(String checkCode) {
+        this.checkCode = checkCode;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -109,4 +120,6 @@ public class UserEntity {
     public int hashCode() {
         return Objects.hash(id, userId, userName, userSex, userType, birthday, password, phone);
     }
+
+
 }

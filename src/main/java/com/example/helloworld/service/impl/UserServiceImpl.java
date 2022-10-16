@@ -47,6 +47,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public Optional<UserEntity> findByUserId(Long userId) {
+        return userRepository.findByUserId(userId);
+    }
+
+    @Override
     public List<UserEntity> findById(Collection<Long> ids) {
         Iterable<UserEntity> iterable = userRepository.findAllById(ids);
         return StreamSupport.stream(iterable.spliterator(), false)

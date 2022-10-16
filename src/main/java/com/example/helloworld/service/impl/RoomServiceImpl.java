@@ -49,6 +49,12 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Override
+    public List<RoomEntity> findByRoomSex(Integer roomSex) {
+        return roomRepository.findAllByRoomSex(roomSex);
+    }
+
+
+    @Override
     public Iterable<RoomEntity> findAll() {
         return roomRepository.findAll();
     }
