@@ -9,4 +9,6 @@ import java.util.List;
 @Repository
 public interface RoomRepository extends CrudRepository<RoomEntity, Long> {
     List<RoomEntity> findAllByRoomSex(Integer roomSex);
+
+    List<RoomEntity> findAllByFloorIdIsAndRoomSexIsAndBedCntFreeGreaterThanEqualAndRoomAvailableIs(Integer floorId, Integer roomSex, Integer bedCntFree, Integer roomAvailable);
 }

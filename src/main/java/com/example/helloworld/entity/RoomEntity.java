@@ -28,7 +28,6 @@ public class RoomEntity {
     @Basic
     @Column(name = "bed_cnt_free")
     private Integer bedCntFree;
-
     @Basic
     @Column(name = "floor_id")
     private Integer floorId;

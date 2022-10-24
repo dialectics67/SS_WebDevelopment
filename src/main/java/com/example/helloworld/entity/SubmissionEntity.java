@@ -1,6 +1,7 @@
 package com.example.helloworld.entity;
 
 import javax.persistence.*;
+import java.sql.Timestamp;
 import java.util.Objects;
 
 @Entity
@@ -22,6 +23,12 @@ public class SubmissionEntity {
     @Basic
     @Column(name = "status")
     private Integer status;
+    @Basic
+    @Column(name = "submit_time")
+    private java.sql.Timestamp submitTime;
+    @Basic
+    @Column(name = "room_room_id")
+    private Long roomRoomId;
 
     public Long getId() {
         return id;
@@ -74,5 +81,21 @@ public class SubmissionEntity {
     @Override
     public int hashCode() {
         return Objects.hash(id, floorId, userId, userCnt, status);
+    }
+
+    public Timestamp getSubmitTime() {
+        return submitTime;
+    }
+
+    public void setSubmitTime(Timestamp submitTime) {
+        this.submitTime = submitTime;
+    }
+
+    public Long getRoomRoomId() {
+        return roomRoomId;
+    }
+
+    public void setRoomRoomId(Long roomRoomId) {
+        this.roomRoomId = roomRoomId;
     }
 }

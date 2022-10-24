@@ -1,12 +1,13 @@
 package com.example.helloworld.controller;
 
 import com.example.helloworld.constants.Consts;
-import com.example.helloworld.entity.RoomEntity;
-import com.example.helloworld.entity.UserEntity;
-import com.example.helloworld.service.RoomService;
-import com.example.helloworld.service.UserService;
+import com.example.helloworld.entity.*;
+import com.example.helloworld.service.*;
 import com.example.helloworld.utils.CommonUtil;
 import com.example.helloworld.utils.CookieUtil;
+import com.example.helloworld.webObject.TeamMember;
+import com.example.helloworld.webObject.WebSubmission;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.json.JSONObject;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
@@ -31,12 +32,18 @@ public class PageController {
     private final CommonUtil commonUtil;
     private final CookieUtil cookieUtil;
     private final RoomService roomService;
+    private final SubmissionService submissionService;
+    private final SubmissionUserService submissionUserService;
+    private final RoomBedUserService roomBedUserService;
 
-    public PageController(UserService userService, CommonUtil commonUtil, CookieUtil cookieUtil, RoomService roomService) {
+    public PageController(UserService userService, CommonUtil commonUtil, CookieUtil cookieUtil, RoomService roomService, SubmissionService submissionService, SubmissionUserService submissionUserService, RoomBedUserService roomBedUserService) {
         this.userService = userService;
         this.commonUtil = commonUtil;
         this.cookieUtil = cookieUtil;
         this.roomService = roomService;
+        this.submissionService = submissionService;
+        this.submissionUserService = submissionUserService;
+        this.roomBedUserService = roomBedUserService;
     }
 
     /**
@@ -203,4 +210,139 @@ public class PageController {
         res.putOpt("data", floorBedCntFree);
         return res.toString();
     }
+
+    @PostMapping(value = "/u/submission/submit", headers = {"content-type=application/json"})
+    @ResponseBody
+    public String submitSubmission(@RequestBody(required = true) WebSubmission webSubmission, HttpSession session, HttpServletRequest request, HttpServletResponse response) throws JsonProcessingException {
+        // 返回 结果
+        JSONObject res = new JSONObject();
+        res.put("code", "0");
+        res.put("msg", "办理成功");
+
+        // 获取main user
+        Long user_id = (Long) session.getAttribute(Consts.SESSION_USER_ID);
+        UserEntity mainUserEntity = userService.findById(user_id).get();
+        // 订单信息。 问题是自增的主键是什么时候获取的
+        SubmissionEntity submissionEntity = new SubmissionEntity();
+        List<SubmissionUserEntity> submissionUserEntityList = new ArrayList<>();
+        // 初始化订单信息，默认为失败
+        commonUtil.webSubmission2DbSubmission(mainUserEntity, webSubmission, submissionEntity, submissionUserEntityList);
+        // 判断楼号是否为空
+        if (res.get("code") == "0") {
+            if (submissionEntity.getFloorId() == null) {
+                res.put("code", "1012");
+                res.put("msg", "未选择楼号");
+            }
+        }
+        // 判断订单人数是否超限
+        if (res.get("code") == "0") {
+            if (submissionEntity.getUserCnt() > Consts.TEAM_MAX_LENGTH) {
+                res.put("code", "1003");
+                res.put("msg", "订单人数超限");
+            }
+        }
+        // 生成用户列表userEntityList
+        ArrayList<UserEntity> userEntityList = new ArrayList<>();
+        // userEntityList加入main User
+        userEntityList.add(mainUserEntity);
+        // userEntityList加入其他用户，同步判断用户是否存在
+        if (res.get("code") == "0") {
+            for (TeamMember teamMember : webSubmission.getTeamMemberList()) {
+                // 获取 学号
+                Long teamMemberUserId = teamMember.getUserId();
+                Optional<UserEntity> teamUserOptional = userService.findByUserId(teamMemberUserId);
+                // 检查是否获取到用户
+                if (!teamUserOptional.isPresent()) {
+                    res.put("code", "1011");
+                    res.put("msg", "队友学号错误");
+                    break;
+                }
+                UserEntity teamUserEntity = teamUserOptional.get();
+                // 检查验证码是否一致
+                if (!teamUserEntity.getCheckCode().equals(teamMember.getCheckCode())) {
+                    res.put("code", "1007");
+                    res.put("msg", "队友验证码错误");
+                    break;
+                }
+                // 检查成功，teamUserEntity
+                userEntityList.add(teamUserEntity);
+            }
+        }
+        // 判断是否有人已经住宿
+        if (res.get("code") == "0") {
+            for (UserEntity userEntity : userEntityList) {
+                Long user_userId = userEntity.getId();
+                // 已经住宿
+                if (roomBedUserService.findByUserId(user_userId).isPresent()) {
+                    res.put("code", "1006");
+                    res.put("msg", "队友或自己已经办理住宿");
+                    break;
+                }
+            }
+        }
+        // 判断是否存在重复user
+        if (res.get("code") == "0") {
+            Set<Long> user_userIdSet = new HashSet<Long>();
+            for (UserEntity userEntity : userEntityList) {
+                if (user_userIdSet.contains(userEntity.getId())) {
+                    res.put("code", "1004");
+                    res.put("msg", "订单中包含重复人");
+                    break;
+                }
+                user_userIdSet.add(userEntity.getId());
+            }
+        }
+        // 判断订单中所有人的性别是否与mainUser一致
+        if (res.get("code") == "0") {
+            for (UserEntity userEntity : userEntityList) {
+                if (!Objects.equals(userEntity.getUserSex(), mainUserEntity.getUserSex())) {
+                    res.put("code", "1005");
+                    res.put("msg", "订单性别不一致");
+                    break;
+                }
+            }
+        }
+        // 订单合法，开始处理订单
+        if (res.get("code") == "0") {
+            // 获取合法房间列表
+            List<RoomEntity> roomEntityList = roomService.findAllByFloorIdIsAndRoomSexIsAndBedCntFreeGreaterThanEqualAndRoomAvailableIsTrue(webSubmission.getFloorId(), mainUserEntity.getUserSex(), submissionEntity.getUserCnt());
+            if (roomEntityList.isEmpty()) {
+                res.put("code", "1010");
+                res.put("msg", "无符合条件的房间");
+            } else {
+                // 随机获取一个房间
+                RoomEntity roomEntity = roomEntityList.get(0);
+                // 根据roomEntity 获取可用的床位列表
+                List<RoomBedUserEntity> roomBedUserEntityList = roomBedUserService.findAllByRoomIdIsAndUserIdIsNull(roomEntity.getId());
+                while (roomBedUserEntityList.size() > submissionEntity.getUserCnt()) {
+                    roomBedUserEntityList.remove(0);
+                }
+                // 更改房间剩余床位的数量
+                roomEntity.setBedCntFree(roomEntity.getBedCntFree() - submissionEntity.getUserCnt());
+                // 将user_id写入roomBedUserEntityList
+                for (int i = 0; i < roomBedUserEntityList.size(); i++) {
+                    roomBedUserEntityList.get(i).setUserId(userEntityList.get(i).getId());
+                }
+                // 写回room
+                roomService.save(roomEntity);
+                // 写回roomBedUser
+                for (RoomBedUserEntity roomBedUserEntity : roomBedUserEntityList) {
+                    roomBedUserService.save(roomBedUserEntity);
+                }
+                submissionEntity.setRoomRoomId(roomEntity.getRoomId());
+            }
+        }
+        // 先提交submissionEntity，获取订单id，然后写入submissionUserEntity
+        submissionService.save(submissionEntity);
+        for (SubmissionUserEntity submissionUserEntity : submissionUserEntityList) {
+            submissionUserEntity.setSubmissionId(submissionEntity.getId());
+            submissionUserService.save(submissionUserEntity);
+        }
+        Map<String, Object> rstData = new HashMap<>();
+        rstData.put("submission", submissionEntity);
+        rstData.put("submissionTeamMembers", submissionUserEntityList);
+        res.putOpt("data", rstData);
+        return res.toString();
+    }
+
 }

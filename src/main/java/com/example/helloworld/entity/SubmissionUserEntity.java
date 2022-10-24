@@ -14,8 +14,11 @@ public class SubmissionUserEntity {
     @Column(name = "submission_id")
     private Long submissionId;
     @Basic
-    @Column(name = "user_id")
-    private Long userId;
+    @Column(name = "user_user_id")
+    private Long userUserId;
+    @Basic
+    @Column(name = "check_code")
+    private String checkCode;
 
     public Long getId() {
         return id;
@@ -33,12 +36,12 @@ public class SubmissionUserEntity {
         this.submissionId = submissionId;
     }
 
-    public Long getUserId() {
-        return userId;
+    public Long getUserUserId() {
+        return userUserId;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public void setUserUserId(Long userId) {
+        this.userUserId = userId;
     }
 
     @Override
@@ -46,11 +49,19 @@ public class SubmissionUserEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         SubmissionUserEntity that = (SubmissionUserEntity) o;
-        return Objects.equals(id, that.id) && Objects.equals(submissionId, that.submissionId) && Objects.equals(userId, that.userId);
+        return Objects.equals(id, that.id) && Objects.equals(submissionId, that.submissionId) && Objects.equals(userUserId, that.userUserId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, submissionId, userId);
+        return Objects.hash(id, submissionId, userUserId);
+    }
+
+    public String getCheckCode() {
+        return checkCode;
+    }
+
+    public void setCheckCode(String checkCode) {
+        this.checkCode = checkCode;
     }
 }

@@ -1,12 +1,19 @@
 package com.example.helloworld.utils;
 
+import com.example.helloworld.entity.SubmissionEntity;
+import com.example.helloworld.entity.SubmissionUserEntity;
 import com.example.helloworld.entity.UserEntity;
+import com.example.helloworld.webObject.TeamMember;
+import com.example.helloworld.webObject.WebSubmission;
 import org.json.JSONObject;
 import org.springframework.stereotype.Component;
 import org.springframework.util.DigestUtils;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.sql.Timestamp;
+import java.time.Instant;
+import java.util.List;
 
 @Component
 public class CommonUtil {
@@ -31,9 +38,18 @@ public class CommonUtil {
         return URLEncoder.encode(String.valueOf(jsonObject), "utf-8");
     }
 
-    public String webUser2UserEntity() {
-        return null;
+    public void webSubmission2DbSubmission(UserEntity mainUserEntity, WebSubmission webSubmission, SubmissionEntity submissionEntity, List<SubmissionUserEntity> submissionUserEntityList) {
+        submissionEntity.setFloorId(webSubmission.getFloorId());
+        submissionEntity.setUserId(mainUserEntity.getId());
+        submissionEntity.setUserCnt(webSubmission.getTeamMemberLength() + 1);
+        submissionEntity.setStatus(0);
+        submissionEntity.setSubmitTime(Timestamp.from(Instant.now()));
+        for (TeamMember teamMember : webSubmission.getTeamMemberList()) {
+            SubmissionUserEntity submissionUserEntity = new SubmissionUserEntity();
+            submissionUserEntity.setSubmissionId(submissionEntity.getId());
+            submissionUserEntity.setUserUserId(teamMember.getUserId());
+            submissionUserEntity.setCheckCode(teamMember.getCheckCode());
+            submissionUserEntityList.add(submissionUserEntity);
+        }
     }
-
-    ;
 }

@@ -42,10 +42,20 @@ public class RoomBedUserServiceImpl implements RoomBedUserService {
     }
 
     @Override
+    public Optional<RoomBedUserEntity> findByUserId(Long user_userId) {
+        return roomBedUserRepository.findByUserId(user_userId);
+    }
+
+    @Override
     public List<RoomBedUserEntity> findById(Collection<Long> ids) {
         Iterable<RoomBedUserEntity> iterable = roomBedUserRepository.findAllById(ids);
         return StreamSupport.stream(iterable.spliterator(), false)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<RoomBedUserEntity> findAllByRoomIdIsAndUserIdIsNull(Long roomId) {
+        return roomBedUserRepository.findAllByRoomIdIsAndUserIdIsNull(roomId);
     }
 
 }

@@ -22,8 +22,11 @@ public interface RoomBedUserService {
 
     Optional<RoomBedUserEntity> findById(Long id);
 
+    Optional<RoomBedUserEntity> findByUserId(Long id);
+
     List<RoomBedUserEntity> findById(Collection<Long> ids);
 
+    List<RoomBedUserEntity> findAllByRoomIdIsAndUserIdIsNull(Long roomId);
 
 }
 

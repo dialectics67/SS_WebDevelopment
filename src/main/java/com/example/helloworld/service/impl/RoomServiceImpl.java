@@ -53,6 +53,11 @@ public class RoomServiceImpl implements RoomService {
         return roomRepository.findAllByRoomSex(roomSex);
     }
 
+    @Override
+    public List<RoomEntity> findAllByFloorIdIsAndRoomSexIsAndBedCntFreeGreaterThanEqualAndRoomAvailableIsTrue(Integer floorId, Integer roomSex, Integer bedCntFree) {
+        return roomRepository.findAllByFloorIdIsAndRoomSexIsAndBedCntFreeGreaterThanEqualAndRoomAvailableIs(floorId, roomSex, bedCntFree, 1);
+    }
+
 
     @Override
     public Iterable<RoomEntity> findAll() {

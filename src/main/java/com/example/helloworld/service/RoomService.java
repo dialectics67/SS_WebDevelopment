@@ -26,6 +26,8 @@ public interface RoomService {
 
     List<RoomEntity> findByRoomSex(Integer roomSex);
 
+    List<RoomEntity> findAllByFloorIdIsAndRoomSexIsAndBedCntFreeGreaterThanEqualAndRoomAvailableIsTrue(Integer floorId, Integer roomSex, Integer bedCntFree);
+
     Iterable<RoomEntity> findAll();
 
 //    Page<RoomEntity> list(Pageable page);

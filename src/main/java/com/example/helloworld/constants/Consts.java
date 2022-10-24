@@ -15,4 +15,6 @@ public interface Consts {
     String COOKIE_USER = "cookie:user";//->userId: UserEntity
     String COOKIE_USER_USERID = "cookie:userId";//->userId: Long
 
+    Integer TEAM_MAX_LENGTH = 4;
+
 }
