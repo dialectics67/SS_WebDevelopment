@@ -38,7 +38,7 @@ public class RoomController {
      */
     @GetMapping("/get")
     public Optional<RoomEntity> get(Long id) {
-        return roomService.findById(id);
+        return roomService.findAllById(id);
     }
 
     /**

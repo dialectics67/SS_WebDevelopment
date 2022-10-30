@@ -1,33 +1,38 @@
--- 初始化5号楼，每层楼50个房间，每个房间的大小为2~7
+-- 初始化1~5号楼，每层楼10个房间，每个房间的大小为2~7
 DELIMITER //
 
 drop procedure if exists func_init_room;
-# 如果存在test存储过程则删除
-CREATE procedure func_init_room() # 创建无参存储过程，名称为test
+# 初始化房间
+CREATE procedure func_init_room()
 BEGIN
-    DECLARE val_build_index, var_floor_index, var_room_index, var_bed_id, var_bed_cnt_all,var_room_id INT; # 申明楼号, 楼层. 房间号
-    SET val_build_index = 5; # 5号楼
-    SET var_floor_index = 1; # 最小层数
-    WHILE var_floor_index < 5
+    DECLARE val_build_index, var_floor_index, var_room_index, var_bed_cnt_all,var_room_id INT; # 申明楼号, 楼层. 房间号
+    SET val_build_index = 1; # 最小楼号
+    WHILE val_build_index <= 5
         DO
-            SET var_room_index = 1;
-            WHILE var_room_index < 50
+            SET var_floor_index = 1; # 最小层数
+            WHILE var_floor_index <= 5
                 DO
-                    SET var_room_id = val_build_index * 1000 + var_floor_index * 100 + var_room_index;
-                    SET var_bed_cnt_all = (RAND() * (10 - 5) + 2);
+                    SET var_room_index = 1;
+                    WHILE var_room_index <= 10
+                        DO
+                            SET var_room_id = val_build_index * 1000 + var_floor_index * 100 + var_room_index;
+                            SET var_bed_cnt_all = (RAND() * (10 - 5) + 2);
 
-                    INSERT INTO room
-                    (room_id, room_sex, room_available, bed_cnt_all, bet_cnt_available, bed_cnt_free, floor_id)
-                    VALUES (var_room_id, var_floor_index mod 2, 1, var_bed_cnt_all, var_bed_cnt_all,
-                            var_bed_cnt_all, val_build_index);
-                    SET var_room_index = var_room_index + 1; # 循环一次,i加1
-                END WHILE;
-            SET var_floor_index = var_floor_index + 1;
-        END WHILE; # 结束while循环
+                            INSERT INTO room
+                            (room_id, room_sex, room_available, bed_cnt_all, bet_cnt_available, bed_cnt_free, floor_id)
+                            VALUES (var_room_id, var_floor_index mod 2, 1, var_bed_cnt_all, var_bed_cnt_all,
+                                    var_bed_cnt_all, val_build_index);
+                            SET var_room_index = var_room_index + 1; # 循环一次,i加1
+                        END WHILE;
+                    SET var_floor_index = var_floor_index + 1;
+                END WHILE; # 结束while循环
+            SET val_build_index = val_build_index + 1;
+        END WHILE;
+
 END;
 
 DROP procedure IF EXISTS append_beds;
--- 存储过程
+-- 初始化床位
 CREATE PROCEDURE append_beds()
 BEGIN
     -- 该变量用于标识是否还有数据需遍历

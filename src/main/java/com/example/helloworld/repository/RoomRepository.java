@@ -11,4 +11,6 @@ public interface RoomRepository extends CrudRepository<RoomEntity, Long> {
     List<RoomEntity> findAllByRoomSex(Integer roomSex);
 
     List<RoomEntity> findAllByFloorIdIsAndRoomSexIsAndBedCntFreeGreaterThanEqualAndRoomAvailableIs(Integer floorId, Integer roomSex, Integer bedCntFree, Integer roomAvailable);
+
+    List<RoomEntity> findAllByFloorIdAndRoomSex(Integer floorId, Integer roomSex);
 }
